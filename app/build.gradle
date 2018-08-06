@@ -1,0 +1,29 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 27
+    defaultConfig {
+        applicationId "group.tonight.mynetvideoplayer"
+        minSdkVersion 15
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    implementation project(':vitamio')
+    implementation 'org.jsoup:jsoup:1.11.3'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    //RecyclerView辅助工具库
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.38'
+}
