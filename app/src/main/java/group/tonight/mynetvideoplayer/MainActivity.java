@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.webkit.URLUtil;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -114,6 +115,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (TextUtils.isEmpty(url.trim())) {
                     Toast.makeText(this, "请填写视频链接", Toast.LENGTH_SHORT).show();
                     return;
+                }
+                if (!URLUtil.isHttpUrl(url)) {
+                    url = "http://" + url;
                 }
                 mWebView.loadUrl(url);
                 break;
