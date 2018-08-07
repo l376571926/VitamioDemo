@@ -74,12 +74,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         @Override
-        public void onLoadResource(WebView view, String url) {
-            super.onLoadResource(view, url);
-            Log.e(TAG, "onLoadResource: " + url);
-        }
-
-        @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
             Log.e(TAG, "onPageFinished: " + url);
@@ -153,7 +147,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             try {
                 ArrayList<VideoDataBean> videoDataBeanList = new ArrayList<>();
                 Document document = Jsoup.connect(strings[0]).get();
-//                            String title = document.title();//  信息中心 /电视剧/神话/
                 String baseUri1 = document.baseUri();
                 Elements elements = document.select("a[href*=rmvb]");
                 for (Element element : elements) {
@@ -177,7 +170,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                         dataBean.setSize(sizeText);
                     }
-                    Log.e(TAG, "doInBackground: ");
                     videoDataBeanList.add(dataBean);
                 }
                 return videoDataBeanList;

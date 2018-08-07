@@ -1,10 +1,15 @@
 package group.tonight.mynetvideoplayer;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import io.vov.vitamio.MediaPlayer;
+import io.vov.vitamio.Vitamio;
 import io.vov.vitamio.widget.MediaController;
 import io.vov.vitamio.widget.VideoView;
 
@@ -13,11 +18,14 @@ public class PlayActivity extends AppCompatActivity {
     private VideoView mVideoView;
     private int mPosition;
     private MediaController mMediaController;
+    private ProgressDialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Vitamio.isInitialized(getApplicationContext());
         setContentView(R.layout.activity_play);
+        Log.e(TAG, "onCreate: " + savedInstanceState);
 
         mVideoView = (VideoView) findViewById(R.id.surface_view);
 
@@ -31,18 +39,13 @@ public class PlayActivity extends AppCompatActivity {
         mVideoView.setVideoPath(path);
 
         mVideoView.requestFocus();
+        mMediaController = new MediaController(PlayActivity.this, true, ((ViewGroup) mVideoView.getParent()));
+        mMediaController.setVisibility(View.GONE);
+        mVideoView.setMediaController(mMediaController);
         mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 mp.setPlaybackSpeed(1.0f);
-                mp.setOnVideoSizeChangedListener(new MediaPlayer.OnVideoSizeChangedListener() {
-                    @Override
-                    public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
-                        mMediaController = new MediaController(PlayActivity.this);
-                        mVideoView.setMediaController(mMediaController);
-                        mMediaController.setAnchorView(mVideoView);
-                    }
-                });
             }
         });
         mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -51,5 +54,33 @@ public class PlayActivity extends AppCompatActivity {
                 Toast.makeText(PlayActivity.this, "播放完了", Toast.LENGTH_SHORT).show();
             }
         });
+        mDialog = new ProgressDialog(this);
+        mDialog.setTitle("缓冲中。。。");
+
+        mVideoView.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
+            @Override
+            public void onBufferingUpdate(MediaPlayer mp, int percent) {
+                Log.e(TAG, "onBufferingUpdate: " + percent);
+                if (percent != 100) {
+                    mDialog.setMessage(percent + "%");
+                    mDialog.show();
+                } else {
+                    mDialog.dismiss();
+                }
+            }
+        });
+        if (savedInstanceState != null) {
+            long position = savedInstanceState.getLong("position", 0);
+            mVideoView.seekTo(position);
+        }
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.e(TAG, "onSaveInstanceState: ");
+        outState.putLong("position", mVideoView.getCurrentPosition());
+    }
+
+
 }
