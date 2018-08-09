@@ -1,2 +1,5 @@
 # VitamioDemo
 Vitamio网络视频播放、Jsoup解析HTML
+
+
+局域网中电脑用hfs搭建视频服务器，安卓端用jsoup抓包解析视频列表并用Vitamio进行播放

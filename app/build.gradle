@@ -26,4 +26,6 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     //RecyclerView辅助工具库
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.38'
+    implementation 'com.android.support:support-v4:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
 }

@@ -72,7 +72,21 @@ public class VideoListActivity extends AppCompatActivity implements BaseQuickAda
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-
+            if (data != null) {
+                if (data.hasExtra("position")) {
+                    int position = data.getIntExtra("position", -1);
+                    if (position != -1) {
+                        position++;
+                        if (position < mBaseQuickAdapter.getItemCount()) {
+                            VideoDataBean dataBean = mBaseQuickAdapter.getItem(position);
+                            Intent intent = new Intent(VideoListActivity.this, PlayActivity.class);
+                            intent.putExtra("videoUrl", dataBean.getUrl());
+                            intent.putExtra("position", position);
+                            startActivityForResult(intent, 0);
+                        }
+                    }
+                }
+            }
         }
     }
 }
